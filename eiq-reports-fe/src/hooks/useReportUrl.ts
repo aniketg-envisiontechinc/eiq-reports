@@ -9,5 +9,15 @@ import { decodeReportParam } from '@/lib/reportUrl';
  */
 export function useReportUrl(): string | undefined {
   const searchParams = useSearchParams();
-  return decodeReportParam(searchParams.get('r')) ?? undefined;
+  const decoded = decodeReportParam(searchParams.get('r'));
+  if (!decoded) return undefined;
+
+  // If decoded is a relative path, prepend the S3 base URL + bucket
+  if (decoded.startsWith('/')) {
+    const base = process.env.NEXT_PUBLIC_S3_BASE_URL ?? '';
+    const bucket = process.env.NEXT_PUBLIC_S3_BUCKET_NAME ?? '';
+    return `${base}/${bucket}${decoded}`;
+  }
+
+  return decoded;
 }
