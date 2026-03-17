@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: eiq-reports-be
-  namespace: engageiq
+  namespace: eiq-apps
   labels:
     app: eiq-reports-be
 spec:
@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: eiq-reports-be
-          image: your-registry/eiq-reports-be:latest
-          imagePullPolicy: Always
+          image: eiq-reports-be:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 3005
           env:
