@@ -42,13 +42,13 @@ spec:
               memory: "512Mi"
           livenessProbe:
             httpGet:
-              path: /api
+              path: /api/meta
               port: 3005
             initialDelaySeconds: 15
             periodSeconds: 20
           readinessProbe:
             httpGet:
-              path: /api
+              path: /api/meta
               port: 3005
             initialDelaySeconds: 10
             periodSeconds: 10
