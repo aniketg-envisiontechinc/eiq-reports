@@ -1,0 +1,53 @@
+[
+  {
+    "eventId": 92942620450,
+    "audioVideoQuality": 3,
+    "easeOfUse": 4,
+    "contentRelevance": 5,
+    "presenterEffectiveness": 5,
+    "ratingsCount": 0,
+    "userEmail": "aditya.pawar@ext.dctinc.com",
+    "additionalComments": "good",
+    "createdAt": "2025-07-24T06:26:07.786Z",
+    "updatedAt": "2025-07-24T06:26:07.786Z"
+  },
+  {
+    "eventId": 92942620450,
+    "audioVideoQuality": 5,
+    "easeOfUse": 4,
+    "contentRelevance": 4,
+    "presenterEffectiveness": 4,
+    "ratingsCount": 0,
+    "userEmail": "kedarnath.j@dctinc.com",
+    "additionalComments": "dd",
+    "createdAt": "2025-09-17T12:03:32.770Z",
+    "updatedAt": "2025-09-17T12:03:32.770Z",
+    "jobTitle": "CDO"
+  },
+  {
+    "eventId": 92942620450,
+    "audioVideoQuality": 5,
+    "easeOfUse": 4,
+    "contentRelevance": 4,
+    "presenterEffectiveness": 4,
+    "ratingsCount": 0,
+    "userEmail": "kedarnath.j@dctinc.com",
+    "additionalComments": "dd",
+    "createdAt": "2025-09-17T12:03:35.636Z",
+    "updatedAt": "2025-09-17T12:03:35.636Z",
+    "jobTitle": "CDO"
+  },
+  {
+    "eventId": 92942620450,
+    "audioVideoQuality": 3,
+    "easeOfUse": 4,
+    "contentRelevance": 5,
+    "presenterEffectiveness": 5,
+    "ratingsCount": 0,
+    "userEmail": "aditya.pawar@ext.dctinc.com",
+    "additionalComments": "trhh",
+    "createdAt": "2025-09-23T12:39:19.487Z",
+    "updatedAt": "2025-09-23T12:39:19.487Z",
+    "jobTitle": "Software developer"
+  }
+]

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eiq-reports-fe
+  namespace: engageiq
+  labels:
+    app: eiq-reports-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eiq-reports-fe
+  template:
+    metadata:
+      labels:
+        app: eiq-reports-fe
+    spec:
+      containers:
+        - name: eiq-reports-fe
+          image: your-registry/eiq-reports-fe:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3004
+          env:
+            # Internal K8s service DNS for backend API
+            - name: REPORTS_API_URL
+              value: "http://eiq-reports-be-service:3005"
+
+            # MinIO public base URL (no trailing slash)
+            - name: NEXT_PUBLIC_S3_BASE_URL
+              value: "https://s3-dev.engageiqglobal.com"
+
+            # MinIO bucket name
+            - name: NEXT_PUBLIC_S3_BUCKET_NAME
+              value: "engageiqdevassets"
+
+            # Report viewer public URL
+            - name: NEXT_PUBLIC_REPORT_VIEWER_URL
+              value: "http://report-dev.engageiqglobal.com/"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3004
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3004
+            initialDelaySeconds: 10
+            periodSeconds: 10

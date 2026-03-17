@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eiq-reports-be
+  namespace: engageiq
+  labels:
+    app: eiq-reports-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eiq-reports-be
+  template:
+    metadata:
+      labels:
+        app: eiq-reports-be
+    spec:
+      containers:
+        - name: eiq-reports-be
+          image: your-registry/eiq-reports-be:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3005
+          env:
+            - name: PORT
+              value: "3005"
+
+            # Optional: MinIO report JSON URL
+            # Remove or leave empty to use bundled local data files
+            - name: REPORT_URL
+              value: ""
+
+            # CORS — must match the FE service/ingress URL
+            - name: CORS_ORIGIN
+              value: "http://report-dev.engageiqglobal.com"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /api
+              port: 3005
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 3005
+            initialDelaySeconds: 10
+            periodSeconds: 10

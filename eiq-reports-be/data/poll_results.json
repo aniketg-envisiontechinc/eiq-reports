@@ -1,0 +1,270 @@
+[
+  {
+    "_id": "68caa2c53584cb6641bd054b",
+    "eventId": 92942620450,
+    "questionTitle": "What's your favorite type of food?",
+    "options": {
+      "a": "Pizza",
+      "b": "Burgers",
+      "c": "Salads",
+      "d": "I'm not sure"
+    },
+    "results": {
+      "d": 1,
+      "a": 4
+    },
+    "respondents": {
+      "d": [
+        "kedarnath.j@dctinc.com"
+      ],
+      "a": [
+        "rahul131@gmail.com",
+        "rahul131@gmail.com",
+        "rahul132@gmail.com",
+        "rahul124@gmail.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 5
+  },
+  {
+    "_id": "68cabd1effc041fcbf772105",
+    "eventId": 92942620450,
+    "questionTitle": "treste",
+    "options": {
+      "a": "12",
+      "b": "Unsure / don’t know",
+      "c": "333"
+    },
+    "results": {
+      "b": 1
+    },
+    "respondents": {
+      "b": [
+        "kedarnath.j@dctinc.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 1
+  },
+  {
+    "_id": "68d23d571892976969b209dc",
+    "eventId": 92942620450,
+    "questionTitle": "As renewals hit record highs, we're diving into the data and solutions. What’s your top concern going into 2025?",
+    "options": {
+      "a": "Rising premium costs",
+      "b": "Lack of pricing transparency from carriers",
+      "c": "Limited plan options for employees",
+      "d": "Increased employee dissatisfaction",
+      "e": "Not sure yet — still reviewing our options"
+    },
+    "results": {
+      "c": 1,
+      "a": 6,
+      "e": 2
+    },
+    "respondents": {
+      "c": [
+        "rahul016@gmail.com"
+      ],
+      "a": [
+        "rahul135@gmail.com",
+        "rahul122@gmail.com",
+        "rahul129@gmail.com",
+        "rahul131@gmail.com",
+        "rahul124@gmail.com",
+        "rahul124@gmail.com"
+      ],
+      "e": [
+        "rahul132@gmail.com",
+        "rahul132@gmail.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 9
+  },
+  {
+    "_id": "68d23dc01892976969b209e1",
+    "eventId": 92942620450,
+    "questionTitle": "How big of a lift is it to get your leaders to embrace modern technology and AI?",
+    "options": {
+      "a": "No issue at all. They’re all in.",
+      "b": "There’s a modest level of distrust but nothing that can’t be overcome.",
+      "c": "There’s a lot of distrust and it’s a big problem for our firm to adopt.",
+      "d": "We’re not going to be able to adopt AI."
+    },
+    "results": {},
+    "respondents": {},
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 0
+  },
+  {
+    "_id": "68d23e1c1892976969b209e6",
+    "eventId": 92942620450,
+    "questionTitle": "Do you have a Customer Data Management process in place that assesses and measures the accuracy of your customer data?",
+    "options": {
+      "a": "Yes",
+      "b": "No",
+      "c": "Don’t Know"
+    },
+    "results": {
+      "a": 3,
+      "b": 1,
+      "c": 1
+    },
+    "respondents": {
+      "a": [
+        "aditya.pawar@ext.dctinc.com",
+        "aditya.pawar@ext.dctinc.com",
+        "rahul129@gmail.com"
+      ],
+      "b": [
+        "rahul135@gmail.com"
+      ],
+      "c": [
+        "rahul122@gmail.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 5
+  },
+  {
+    "_id": "68d23eb01892976969b209eb",
+    "eventId": 92942620450,
+    "questionTitle": "Thinking about your organization's business interests, which of the following policy areas do you think is most urgent for the next administration and Congress to address?",
+    "options": {
+      "a": "Affordable housing",
+      "b": "Immigration",
+      "c": "National debt",
+      "d": "Current wars and potential conflicts",
+      "e": "The economy",
+      "f": "Tax reform",
+      "g": "Industry regulation and compliance burdens",
+      "h": "Cybersecurity",
+      "i": "1122",
+      "j": "3344",
+      "k": "5566"
+    },
+    "results": {
+      "a": 1,
+      "i": 2,
+      "k": 3
+    },
+    "respondents": {
+      "a": [
+        "rahul011@gmail.com"
+      ],
+      "i": [
+        "rahul129@gmail.com",
+        "rahul129@gmail.com"
+      ],
+      "k": [
+        "rahul132@gmail.com",
+        "rahul131@gmail.com",
+        "rahul124@gmail.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 6
+  },
+  {
+    "_id": "68d23f4a1892976969b209f0",
+    "eventId": 92942620450,
+    "questionTitle": "To what extent is your financial institution partnering with FinTechs?",
+    "options": {
+      "a": "Not at all and FinTech partnerships are not part of our strategic direction",
+      "b": "Not currently offering FinTech solutions but plan leverage partnerships within the next 12 months.​",
+      "c": "Currently offer FinTech solutions to our SMB customers, but not through digital",
+      "d": "Currently offer FinTech solutions to our SMB customers that are integrated with our digital banking platform"
+    },
+    "results": {
+      "a": 2,
+      "c": 1
+    },
+    "respondents": {
+      "a": [
+        "aditya.pawar@ext.dctinc.com",
+        "rahul011@gmail.com"
+      ],
+      "c": [
+        "rahul016@gmail.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 3
+  },
+  {
+    "_id": "68d23f721892976969b209f5",
+    "eventId": 92942620450,
+    "questionTitle": "To what extent is your financial institution focused on specific vertical industries within your market?",
+    "options": {
+      "a": "We don't segment our market by industry vertical",
+      "b": "We target some vertical segments within our market, but our digital offering is the same for all segments",
+      "c": "We target some vertical segments within our market, and we tailor our digital offering to align with their specific needs"
+    },
+    "results": {},
+    "respondents": {},
+    "customResponses": [],
+    "pollType": "radio",
+    "__v": 0
+  },
+  {
+    "_id": "68d23fcf1892976969b209fa",
+    "eventId": 92942620450,
+    "questionTitle": "Areyou currently using any tools to manage your lease accounting process?",
+    "options": {
+      "a": "Yes, spreadsheets",
+      "b": "Yes, standalone software",
+      "c": "Yes, integrated real estate and lease accounting software",
+      "d": "I’m not sure"
+    },
+    "results": {},
+    "respondents": {},
+    "customResponses": [],
+    "pollType": "checkbox",
+    "__v": 0
+  },
+  {
+    "_id": "68d2401f1892976969b209ff",
+    "eventId": 92942620450,
+    "questionTitle": "What is your greatest challenge with lease accounting",
+    "options": {
+      "a": "Processes, policies, and controls",
+      "b": "Systems and automation",
+      "c": "Accounting complexity",
+      "d": "Embedding leasing into the monthly close process",
+      "e": "All of the above"
+    },
+    "results": {
+      "a": 3,
+      "b": 3,
+      "c": 2
+    },
+    "respondents": {
+      "a": [
+        "rahul135@gmail.com",
+        "rahul122@gmail.com",
+        "rahul129@gmail.com"
+      ],
+      "b": [
+        "rahul135@gmail.com",
+        "rahul122@gmail.com",
+        "rahul129@gmail.com"
+      ],
+      "c": [
+        "rahul122@gmail.com",
+        "rahul129@gmail.com"
+      ]
+    },
+    "customResponses": [],
+    "pollType": "checkbox",
+    "__v": 3
+  }
+]
