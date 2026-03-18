@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import clsx from 'clsx';
 import { MessageSquare, BarChart2, MessagesSquare } from 'lucide-react';
 
@@ -13,6 +13,10 @@ const tabs = [
 
 export default function EngagementTabs() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const r = searchParams.get('r');
+
+  const tabHref = (base: string) => (r ? `${base}?r=${r}` : base);
 
   return (
     <div className="flex gap-1 mb-6 bg-white rounded-xl border border-gray-100 p-1.5 shadow-sm w-fit">
@@ -21,7 +25,7 @@ export default function EngagementTabs() {
         return (
           <Link
             key={tab.href}
-            href={tab.href}
+            href={tabHref(tab.href)}
             className={clsx(
               'flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all',
               isActive

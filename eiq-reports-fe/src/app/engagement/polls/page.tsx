@@ -14,8 +14,8 @@ export default function PollsPage() {
           <h2 className="text-xl font-semibold text-gray-800">Engagement</h2>
           <p className="text-sm text-gray-500 mt-0.5">Questions, polls and chat interactions</p>
         </div>
-        <EngagementTabs />
-        <PollsContent />
+        <Suspense fallback={null}><EngagementTabs /></Suspense>
+        <Suspense fallback={null}><PollsContent /></Suspense>
       </main>
     </>
   );

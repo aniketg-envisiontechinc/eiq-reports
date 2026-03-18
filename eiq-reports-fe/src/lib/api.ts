@@ -43,3 +43,9 @@ export async function fetchMeta(reportUrl?: string) {
   if (!res.ok) return null;
   return res.json();
 }
+
+export async function fetchChat(reportUrl?: string) {
+  const res = await fetch(withReportUrl(`${API_BASE}/chat`, reportUrl));
+  if (!res.ok) throw new Error('Failed to fetch chat');
+  return res.json();
+}

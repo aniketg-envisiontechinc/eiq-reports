@@ -5,8 +5,9 @@ import { FeedbackModule } from './feedback/feedback.module';
 import { PollsModule } from './polls/polls.module';
 import { QnaModule } from './qna/qna.module';
 import { MetaModule } from './meta/meta.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
-  imports: [DashboardModule, AttendeesModule, FeedbackModule, PollsModule, QnaModule, MetaModule],
+  imports: [DashboardModule, AttendeesModule, FeedbackModule, PollsModule, QnaModule, MetaModule, ChatModule],
 })
 export class AppModule {}

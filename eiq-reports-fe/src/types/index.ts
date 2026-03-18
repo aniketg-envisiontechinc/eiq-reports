@@ -98,6 +98,22 @@ export interface Poll {
   answeredOptions: PollOption[];
 }
 
+export interface ChatMessage {
+  id: string;
+  senderName: string;
+  senderEmail: string | null;
+  senderRole: string;
+  message: string;
+  messageType: string;
+  targetAudience: string;
+  sentAt: string | null;
+}
+
+export interface ChatResponse {
+  totalMessages: number;
+  messages: ChatMessage[];
+}
+
 export interface QnaQuestion {
   participantName: string;
   participantEmail: string;
@@ -117,7 +133,7 @@ export interface QnaQuestion {
 }
 
 export interface QnaResponse {
-  eventId: number;
+  eventId: string;
   startTime: string;
   totalQuestions: number;
   answeredCount: number;

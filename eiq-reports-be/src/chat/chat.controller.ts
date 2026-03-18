@@ -1,0 +1,12 @@
+import { Controller, Get, Query } from '@nestjs/common';
+import { ChatService } from './chat.service';
+
+@Controller('chat')
+export class ChatController {
+  constructor(private readonly chatService: ChatService) {}
+
+  @Get()
+  getChat(@Query('reportUrl') reportUrl?: string) {
+    return this.chatService.getChat(reportUrl);
+  }
+}

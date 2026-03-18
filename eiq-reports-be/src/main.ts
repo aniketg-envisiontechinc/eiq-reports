@@ -1,11 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { initDataLoader } from './common/data-loader';
 
 async function bootstrap() {
-  // Load report data (from MinIO URL if REPORT_URL is set, otherwise local files)
-  await initDataLoader();
-
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
   const corsOrigins = process.env.CORS_ORIGIN
