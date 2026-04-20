@@ -13,9 +13,21 @@ interface ReportMeta {
   reportVersion?: string;
 }
 
+export interface PollRespondents {
+  questions: { id: string; question: string }[];
+  respondents: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    company: string;
+    answers: Record<string, string>;
+  }[];
+}
+
 interface ReportSlices {
   attendees: any[];
   polls: any[];
+  pollRespondents: PollRespondents;
   qna: any;
   chat: any;
   feedback: any[];
@@ -26,11 +38,28 @@ const urlCache = new Map<string, { slices: ReportSlices; expiresAt: number }>();
 const CACHE_TTL_MS = 60 * 1000; // 1 minute
 
 // ---------------------------------------------------------------------------
+// Resolve a possibly-relative report path to a full URL.
+// The frontend's useReportUrl hook does this client-side; we mirror it here
+// so the backend can handle relative paths when env vars aren't forwarded.
+// ---------------------------------------------------------------------------
+function resolveReportUrl(reportUrl: string): string {
+  if (reportUrl.startsWith('http://') || reportUrl.startsWith('https://')) {
+    return reportUrl;
+  }
+  const base   = (process.env.S3_BASE_URL   ?? '').replace(/\/$/, '');
+  const bucket = (process.env.S3_BUCKET     ?? '').replace(/^\//, '').replace(/\/$/, '');
+  const path   = reportUrl.startsWith('/') ? reportUrl : `/${reportUrl}`;
+  if (!base) throw new Error(`Cannot resolve relative reportUrl "${reportUrl}": S3_BASE_URL not configured`);
+  return bucket ? `${base}/${bucket}${path}` : `${base}${path}`;
+}
+
+// ---------------------------------------------------------------------------
 // Empty defaults — returned when no reportUrl is provided
 // ---------------------------------------------------------------------------
 
 const EMPTY_QNA = { id: '', start_time: null, questions: [] };
 const EMPTY_CHAT = { totalMessages: 0, messages: [] };
+const EMPTY_POLL_RESPONDENTS: PollRespondents = { questions: [], respondents: [] };
 
 // ---------------------------------------------------------------------------
 // Shared transformation (report JSON → shapes the services expect)
@@ -97,7 +126,13 @@ function transformReport(report: any): ReportSlices {
   const meta = report.meta ?? {};
   const chat = report.chat ?? EMPTY_CHAT;
 
-  return { attendees, polls, qna, chat, feedback, meta };
+  // Per-respondent poll data (report v2+). Older reports may omit this section.
+  const pr = report.pollRespondents;
+  const pollRespondents: PollRespondents = pr && Array.isArray(pr.questions) && Array.isArray(pr.respondents)
+    ? { questions: pr.questions, respondents: pr.respondents }
+    : EMPTY_POLL_RESPONDENTS;
+
+  return { attendees, polls, pollRespondents, qna, chat, feedback, meta };
 }
 
 // ---------------------------------------------------------------------------
@@ -105,14 +140,16 @@ function transformReport(report: any): ReportSlices {
 // ---------------------------------------------------------------------------
 
 async function fetchSlicesFromUrl(reportUrl: string): Promise<ReportSlices> {
-  const cached = urlCache.get(reportUrl);
+  const resolved = resolveReportUrl(reportUrl);
+
+  const cached = urlCache.get(resolved);
   if (cached && Date.now() < cached.expiresAt) return cached.slices;
 
-  const res = await fetch(reportUrl);
-  if (!res.ok) throw new Error(`Failed to fetch report from ${reportUrl}: ${res.status}`);
+  const res = await fetch(resolved);
+  if (!res.ok) throw new Error(`Failed to fetch report from ${resolved}: ${res.status}`);
   const report = await res.json();
   const slices = transformReport(report);
-  urlCache.set(reportUrl, { slices, expiresAt: Date.now() + CACHE_TTL_MS });
+  urlCache.set(resolved, { slices, expiresAt: Date.now() + CACHE_TTL_MS });
   return slices;
 }
 
@@ -133,6 +170,11 @@ export async function getFeedbackForRequest(reportUrl?: string): Promise<any[]> 
 export async function getPollsForRequest(reportUrl?: string): Promise<any[]> {
   if (!reportUrl) return [];
   return (await fetchSlicesFromUrl(reportUrl)).polls;
+}
+
+export async function getPollRespondentsForRequest(reportUrl?: string): Promise<PollRespondents> {
+  if (!reportUrl) return EMPTY_POLL_RESPONDENTS;
+  return (await fetchSlicesFromUrl(reportUrl)).pollRespondents;
 }
 
 export async function getQnaForRequest(reportUrl?: string): Promise<any> {

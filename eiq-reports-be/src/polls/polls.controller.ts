@@ -9,4 +9,9 @@ export class PollsController {
   getPolls(@Query('reportUrl') reportUrl?: string) {
     return this.pollsService.getPolls(reportUrl);
   }
+
+  @Get('export')
+  exportPollRespondents(@Query('reportUrl') reportUrl?: string) {
+    return this.pollsService.exportPollRespondents(reportUrl);
+  }
 }

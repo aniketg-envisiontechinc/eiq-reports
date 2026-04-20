@@ -32,6 +32,12 @@ export async function fetchPolls(reportUrl?: string) {
   return res.json();
 }
 
+export async function fetchPollExport(reportUrl?: string) {
+  const res = await fetch(withReportUrl(`${API_BASE}/polls/export`, reportUrl));
+  if (!res.ok) throw new Error('Failed to fetch poll export');
+  return res.json();
+}
+
 export async function fetchQna(reportUrl?: string) {
   const res = await fetch(withReportUrl(`${API_BASE}/qna`, reportUrl));
   if (!res.ok) throw new Error('Failed to fetch Q&A');
