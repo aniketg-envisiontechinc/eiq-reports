@@ -1,44 +1,115 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { fetchPolls } from '@/lib/api';
+import { useEffect, useRef, useState } from 'react';
+import { fetchPolls, fetchPollExport } from '@/lib/api';
+import { downloadCsv, downloadPollsXlsx } from '@/lib/exportUtils';
 import { useReportUrl } from '@/hooks/useReportUrl';
-import type { Poll } from '@/types';
-import { Download, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import type { Poll, PollExportData } from '@/types';
+import { Download, ChevronDown, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 
 const PAGE_SIZE = 10;
+
+type ExportFormat = 'csv' | 'xlsx';
 
 export default function PollsContent() {
   const reportUrl = useReportUrl();
 
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [page, setPage] = useState(1);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchPolls(reportUrl).then(setPolls).finally(() => setLoading(false));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportUrl]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
   const totalPages = Math.ceil(polls.length / PAGE_SIZE);
   const paginated = polls.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const handleExport = () => {
-    const rows: string[][] = [];
-    rows.push(['Question Title', 'Poll Type', 'Options', 'Answered Option : Count']);
-    polls.forEach((poll) => {
+  /**
+   * Build CSV export rows (headers + data rows).
+   *   - If respondent data is available: per-respondent pivot table.
+   *   - Fallback: aggregated summary from the report JSON.
+   */
+  const buildCsvRows = async (): Promise<string[][]> => {
+    if (reportUrl) {
+      try {
+        const data: PollExportData = await fetchPollExport(reportUrl);
+        if (data.respondents.length > 0) {
+          const headers = [
+            'Email', 'First Name', 'Last Name', 'Company',
+            ...data.questions.map((q) => q.question),
+          ];
+          const rows = data.respondents.map((r) => [
+            r.email,
+            r.firstName,
+            r.lastName,
+            r.company,
+            ...data.questions.map((q) => r.answers[q.id] ?? ''),
+          ]);
+          return [headers, ...rows];
+        }
+      } catch {
+        // fall through to aggregated export
+      }
+    }
+
+    // Aggregated summary fallback
+    const headers = ['Question Title', 'Poll Type', 'Options', 'Answered Option : Count'];
+    const rows = polls.map((poll) => {
       const optionsText = poll.options.map((o) => `${o.key.toUpperCase()}: ${o.label}`).join(' | ');
       const answeredText = poll.answeredOptions.map((o) => `${o.label}: ${o.count}`).join(', ');
-      rows.push([poll.questionTitle, poll.pollType, optionsText, answeredText]);
+      return [poll.questionTitle, poll.pollType, optionsText, answeredText];
     });
-    const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'polls_report.csv';
-    a.click();
+    return [headers, ...rows];
+  };
+
+  const handleExport = async (format: ExportFormat) => {
+    setMenuOpen(false);
+    setExporting(true);
+    try {
+      if (format === 'xlsx') {
+        // XLSX: dual-layout — poll summary with % on left, respondent list + answers on right
+        let questions: PollExportData['questions'] = [];
+        let respondents: PollExportData['respondents'] = [];
+        if (reportUrl) {
+          try {
+            const data: PollExportData = await fetchPollExport(reportUrl);
+            questions = data.questions;
+            respondents = data.respondents;
+          } catch {
+            // respondents stays empty — poll summary still exports
+          }
+        }
+        const pollSummaries = polls.map((p) => ({
+          questionTitle: p.questionTitle,
+          totalVotes: p.totalVotes,
+          options: p.options.map((o) => ({ label: o.label, count: o.count })),
+        }));
+        await downloadPollsXlsx(pollSummaries, questions, respondents, 'polls_report.xlsx');
+      } else {
+        // CSV: flat per-respondent rows
+        const rows = await buildCsvRows();
+        downloadCsv(rows, 'polls_report.csv');
+      }
+    } finally {
+      setExporting(false);
+    }
   };
 
   if (loading) {
@@ -53,19 +124,52 @@ export default function PollsContent() {
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center justify-between p-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-700">Polls</h3>
-        <button
-          onClick={handleExport}
-          className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          <Download size={14} />
-          Export as CSV
-        </button>
+
+        {/* Export split-button dropdown */}
+        <div className="relative" ref={menuRef}>
+          <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+            <button
+              onClick={() => handleExport('csv')}
+              disabled={exporting}
+              className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+              {exporting ? 'Exporting…' : 'Export as CSV'}
+            </button>
+            <div className="w-px h-full bg-gray-200 self-stretch" />
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              disabled={exporting}
+              className="px-2 py-2 text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="More export options"
+            >
+              <ChevronDown size={14} />
+            </button>
+          </div>
+
+          {menuOpen && (
+            <div className="absolute right-0 mt-1 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+              <button
+                onClick={() => handleExport('csv')}
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
+              >
+                Download as CSV
+              </button>
+              <button
+                onClick={() => handleExport('xlsx')}
+                className="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
+              >
+                Download as XLSX
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-gray-50 border-b border-gray-100">
-            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-1/2">
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide w-1/3">
               Question Title
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
@@ -73,6 +177,9 @@ export default function PollsContent() {
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
               Answered Option : Count
+            </th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Respondents
             </th>
           </tr>
         </thead>
@@ -117,6 +224,15 @@ export default function PollsContent() {
                       </li>
                     ))}
                   </ul>
+                )}
+              </td>
+              <td className="px-4 py-4">
+                {!poll.respondentEmails || poll.respondentEmails.length === 0 ? (
+                  <span className="text-gray-300 text-xs">—</span>
+                ) : (
+                  <p className="text-xs text-gray-600 break-all" title={poll.respondentEmails.join(', ')}>
+                    {poll.respondentEmails.join(', ')}
+                  </p>
                 )}
               </td>
             </tr>

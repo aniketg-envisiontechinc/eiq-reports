@@ -96,6 +96,7 @@ export interface Poll {
   options: PollOption[];
   totalVotes: number;
   answeredOptions: PollOption[];
+  respondentEmails?: string[];
 }
 
 export interface ChatMessage {
@@ -139,4 +140,17 @@ export interface QnaResponse {
   answeredCount: number;
   unansweredCount: number;
   questions: QnaQuestion[];
+}
+
+export interface PollRespondentRow {
+  email: string;
+  firstName: string;
+  lastName: string;
+  company: string;
+  answers: Record<string, string>;
+}
+
+export interface PollExportData {
+  questions: { id: string; question: string }[];
+  respondents: PollRespondentRow[];
 }
